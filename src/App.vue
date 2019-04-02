@@ -16,23 +16,23 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <Main />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import Main from './components/MainComponent.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Main,
   },
-  data () {
+  data() {
     return {
       //
-    }
-  }
-}
+    };
+  },
+};
 </script>
