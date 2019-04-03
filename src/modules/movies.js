@@ -11,13 +11,23 @@ const state = {
 
 const getters = {
   allMovies: currentState => currentState.movies,
+  moviesLoading: currentState => currentState.loading,
 };
 
 const actions = {
   async fetchMovies({ commit }) {
     commit('loading');
-    const response = await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`);
-    const moviesJson = response.data.results;
+    const promiseDump = [];
+    // Request the first 5 pages; each page is only 20 results and we want 100
+    // NOTE: i starts from 1 because API starts from 1 and adding 1 each iteration is wasteful
+    for (let i = 1; i < 6; i += 1) {
+      const response = axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=${i}&vote_count.gte=150`);
+      promiseDump.push(response);
+    }
+    // Todo: handle errors e.g. promise rejections
+    const promises = await Promise.all(promiseDump);
+    const moviesJson = [];
+    promises.map(response => response.data.results.forEach(value => moviesJson.push(value)));
     commit('setMovieList', moviesJson);
   },
 };
