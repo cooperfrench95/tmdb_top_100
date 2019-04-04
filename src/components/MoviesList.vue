@@ -2,18 +2,18 @@
   <v-container>
     <v-layout row justify-space-around wrap>
       <v-flex v-for="(i, index) in this.movies" :key="i.id" xs12 sm6 lg4>
-        <v-card>
-        <v-layout row class="card">
+        <v-card class="cardStyle">
+        <v-layout row justify-center align-center>
           <v-flex xs6>
-            <v-img contain class="card-img" :src="movie_img_baseURL + i.poster_path" />
+            <v-img contain class="card-img pointer" :src="movie_img_baseURL + i.poster_path" />
           </v-flex>
           <v-flex xs6>
             <v-layout fill-height column justify-center class="innerColumn">
                 <h3 @click="setSelectedMovie(i);">
                   {{ index + 1 }}. {{ i.title }}
                 </h3>
-                <p>Average rating: {{ i.vote_average }} / 10</p>
-                <p>Release Year: {{ i.release_date.slice(0, 4) }}</p>
+                <p>{{ i.vote_average }} / 10</p>
+                <p>{{ i.release_date.slice(0, 4) }}</p>
             </v-layout>
           </v-flex>
         </v-layout>
@@ -57,15 +57,23 @@ export default {
 h3 {
   margin-bottom: 20px;
 }
+h3:hover {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
 h1 {
   text-align: center;
   padding: 50px;
 }
-.card {
-  display: flex;
-  flex-direction: row;
-  height: 30vh;
+.cardStyle {
   margin: 20px;
+  padding: 5px 20px 5px 20px;
+}
+.cardStyle:hover {
+  background-color: lightgrey;
+}
+.pointer:hover {
+  cursor: pointer;
 }
 .innerColumn {
   padding: 10px;

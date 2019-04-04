@@ -1,13 +1,13 @@
 <template>
   <v-layout row justify-space-around wrap>
-    <v-flex xs12>
+    <v-flex xs12 md8>
       <v-card>
-      <v-layout row class="card">
-        <v-flex xs6>
-          <v-img contain class="card-img" :src="movie_img_baseURL + selectedMovie.poster_path" />
+      <v-layout justify-center align-center row wrap>
+        <v-flex xs12 sm6>
+            <v-img contain class="card-img" :src="movie_img_baseURL + selectedMovie.poster_path" />
         </v-flex>
-        <v-flex xs6>
-          <v-layout fill-height column justify-center class="innerColumn">
+        <v-flex xs12 sm6>
+          <v-layout fill-height column align-center justify-content-center class="innerColumn">
               <h3>
                 {{ selectedMovie.title }}
               </h3>
@@ -15,18 +15,8 @@
               <p>Release Date: {{ selectedMovie.release_date }}</p>
               <p>Vote Count: {{ selectedMovie.vote_count }}</p>
               <p>{{ selectedMovie.overview }}</p>
-              <div v-for="i in selectedMovie.genre_ids" :key="i">
-                <p>
-                  {{
-                  // Find the corresponding genre name in the list provided by the API and return that 
-                  genres.map((genre) => {
-                    if (genre.id === i) {
-                      return genre.name
-                    }
-                  })[0] 
-                  }}
-                </p>
-              </div>
+              <p>Genres: </p>
+              <span v-for="i in selectedMovieGenres" :key="i.id">{{ i.name }}</span>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -41,7 +31,19 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'MovieDetails',
   computed: {
-    ...mapGetters(['selectedMovie', 'genres'])
+    ...mapGetters(['selectedMovie', 'genres']),
+    selectedMovieGenres: function() {
+      return (
+        this.genres.filter((item) => {
+          if (this.selectedMovie.genre_ids.includes(item.id)) {
+            return true
+          }
+          else {
+            return false
+          }
+        })
+      );
+    },
   },
   data () {
     return {
@@ -59,17 +61,16 @@ h1 {
   text-align: center;
   padding: 50px;
 }
-.card {
+.cardStyles {
   display: flex;
   flex-direction: row;
-  height: 30vh;
   margin: 20px;
 }
 .innerColumn {
   padding: 10px;
+  justify-content: center;
 }
 .card-img {
   min-height: 0;
-  height: 30vh;
 }
 </style>
