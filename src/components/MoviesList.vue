@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-layout row justify-space-around wrap>
+    <v-layout v-if="moviesLoading === false" row justify-space-around wrap>
       <v-flex v-for="(i, index) in this.movies" :key="i.id" xs12 sm6 lg4>
         <v-card class="cardStyle">
         <v-layout row justify-center align-center>
@@ -9,7 +9,7 @@
           </v-flex>
           <v-flex xs6>
             <v-layout fill-height column justify-center class="innerColumn">
-                <h3 @click="setSelectedMovie(i);">
+                <h3 @click="viewMovie(i);">
                   {{ index + 1 }}. {{ i.title }}
                 </h3>
                 <p>{{ i.vote_average }} / 10</p>
@@ -23,18 +23,27 @@
         Sorry, no results found.
       </h1>
     </v-layout>
+    <v-layout row v-else >
+      <v-flex xs12>
+        <v-progress-circular class="loading" indeterminate color="green" size="200" width="20"/>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 // The MoviesList component displays the movies that match the current search.
 export default {
   name: "MoviesList",
   methods: {
-    ...mapActions(['setSelectedMovie'])
+    ...mapActions(['setSelectedMovie']),
+    viewMovie (movie) {
+      this.setSelectedMovie(movie);
+      return this.$router.push('/details');
+    }
   },
   data () {
     return {
@@ -42,6 +51,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['moviesLoading']),
     movies: function() {
       return this.$attrs.filteredMovies;
     },
@@ -86,6 +96,13 @@ h1 {
   text-align: center;
   color: lightgray;
   font-size: 40pt;
+}
+.loading {
+  position: relative;
+  margin-top: 50px;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
  
