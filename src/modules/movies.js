@@ -57,17 +57,19 @@ const actions = {
 
     // If there is a selected movie, we need to update that data.
     if (context.state.selectedMovie !== undefined) {
-      const updatedMovie = [];
-      const update = await axios.get(`https://api.themoviedb.org/3/movie/${context.state.selectedMovie.id}?api_key=${API_KEY}&language=${context.state.language}`);
-      if (updatedMovie.length > 0) {
-        context.commit('selectMovie', update.data);
+      if (wantLoadingSpinner === true) {
+        context.commit('loading');
       }
+      const update = await axios.get(`https://api.themoviedb.org/3/movie/${context.state.selectedMovie.id}?api_key=${API_KEY}&language=${context.state.language}`);
+      context.commit('selectMovie', update.data);
     }
 
     context.commit('setMovieList', moviesJson);
   },
-  setSelectedMovie({ commit }, movie) {
-    commit('selectMovie', movie);
+  async setSelectedMovie(context, movie) {
+    context.commit('loading');
+    const update = await axios.get(`https://api.themoviedb.org/3/movie/${movie.id}?api_key=${API_KEY}&language=${context.state.language}`);
+    context.commit('selectMovie', update.data);
   },
   async fetchGenres({ commit }) {
     // Here we grab the genres list, because for some reason,
@@ -98,7 +100,10 @@ const mutations = {
     currentState.movies = movies;
     currentState.loading = false;
   },
-  selectMovie: (currentState, movie) => (currentState.selectedMovie = movie),
+  selectMovie: (currentState, movie) => {
+    currentState.selectedMovie = movie;
+    currentState.loading = false;
+  },
   addGenres: (currentState, genres) => (currentState.genres = genres),
   toggleIncludeLowVotes: currentState => (
     currentState.includeLowVotes = !currentState.includeLowVotes

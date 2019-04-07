@@ -1,29 +1,77 @@
 <template>
   <v-app> 
     <v-content>
-      <v-layout row justify-space-around wrap>
+      <v-layout v-if="moviesLoading === false" row justify-space-around wrap>
         <v-flex xs12 md8>
           <v-card>
           <v-layout justify-center align-center row wrap>
             <v-flex xs12 sm6>
-                <v-img contain class="card-img" :src="movie_img_baseURL + selectedMovie.poster_path" />
+                <v-img class="card-img" :src="movie_img_baseURL + selectedMovie.poster_path" />
             </v-flex>
             <v-flex xs12 sm6>
-              <v-layout fill-height column align-center justify-content-center class="innerColumn">
-                  <h3>
+              <v-layout column class="innerColumn">
+                  <h2>
                     {{ selectedMovie.title }}
+                  </h2>
+                  <h3>
+                    {{ selectedMovie.tagline }}
                   </h3>
-                  <p>Average rating: {{ selectedMovie.vote_average }} / 10</p>
-                  <p>Release Date: {{ selectedMovie.release_date }}</p>
-                  <p>Vote Count: {{ selectedMovie.vote_count }}</p>
-                  <p>{{ selectedMovie.overview }}</p>
-                  <p>Genres: </p>
-                  <span v-for="i in selectedMovieGenres" :key="i.id">{{ i.name }}</span>
-                  <v-btn class @click="onClick" icon><v-icon>favorite</v-icon></v-btn>
+                  <div>
+                    <span class="genre" 
+                      v-for="i in selectedMovie.genres" 
+                      :key="i.id"
+                      >
+                      {{ i.name.toUpperCase() }}
+                    </span>
+                  </div>
               </v-layout>
             </v-flex>
           </v-layout>
+          <v-layout class="innerColumn">
+            <v-flex xs12>
+              <div>
+                <v-chip>
+                  {{ selectedMovie.vote_average }} / 10
+                </v-chip>
+                <v-chip>Release Date: {{ selectedMovie.release_date }}</v-chip>
+                <v-chip>Vote Count: {{ selectedMovie.vote_count }}</v-chip>
+                <v-chip>{{ selectedMovie.runtime }} MINUTES</v-chip>
+                <v-chip  
+                  v-for="language in selectedMovie.spoken_languages" 
+                  :key="language.name"
+                  >
+                  {{ language.name }}
+                </v-chip>
+                <v-chip 
+                  v-for="i in selectedMovie.production_companies" 
+                  :key="i.id"
+                  >
+                  {{ i.name.toUpperCase() }}
+                </v-chip>
+                <v-chip 
+                  v-for="i in selectedMovie.production_countries" 
+                  :key="i.name"
+                  >
+                  {{ i.name.toUpperCase() }}
+                </v-chip>
+              </div>
+              <p class="description">{{ selectedMovie.overview }}</p>
+              <v-btn  @click="onClick" >
+                <v-icon>favorite</v-icon>
+                {{ 
+                  shortlist.filter(i => i.id === selectedMovie.id).length === 0 
+                  ? 'ADD TO FAVOURITES' 
+                  : 'REMOVE FROM FAVOURITES' 
+                }}
+              </v-btn>
+            </v-flex>
+          </v-layout>
           </v-card>
+        </v-flex>
+      </v-layout>
+      <v-layout row v-else >
+        <v-flex xs12>
+          <v-progress-circular class="loading" indeterminate color="green" size="200" width="20"/>
         </v-flex>
       </v-layout>
     </v-content>
@@ -38,9 +86,9 @@ export default {
   methods: {
     ...mapActions(['editShortList']),
     onClick () {
-      // Don't add the movie to the shortlist if it's already in it
+      // Remove the movie from the shortlist if it's already in it
       if (this.shortlist.filter(i => i.id === this.selectedMovie.id).length > 0) { 
-        return this.editShortList(this.shortlist.filter(i => i.id !== selectedMovie.id));
+        return this.editShortList(this.shortlist.filter(i => i.id !== this.selectedMovie.id));
       }
       else {
         return this.editShortList([...this.shortlist, this.selectedMovie]);
@@ -48,19 +96,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedMovie', 'genres', 'shortlist']),
-    selectedMovieGenres: function() {
-      return (
-        this.genres.filter((item) => {
-          if (this.selectedMovie.genre_ids.includes(item.id)) {
-            return true
-          }
-          else {
-            return false
-          }
-        })
-      );
-    },
+    ...mapGetters(['selectedMovie', 'shortlist', 'moviesLoading']),
   },
   data () {
     return {
@@ -89,5 +125,27 @@ h1 {
 }
 .card-img {
   min-height: 0;
+  object-fit: cover;
+}
+.genre {
+  padding: 10px;
+  border: 1px solid lightgrey;
+  font-family: 'Roboto', sans-serif;
+}
+.loading {
+  position: relative;
+  margin-top: 50px;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.description {
+  padding: 10px;
+  line-height: 0.8cm;
+}
+.noResults {
+  text-align: center;
+  color: lightgray;
+  font-size: 40pt;
 }
 </style>

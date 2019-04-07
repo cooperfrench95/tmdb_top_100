@@ -9,7 +9,7 @@
           </v-flex>
           <v-flex xs6>
             <v-layout fill-height column justify-center class="innerColumn">
-                <h3 @click="setSelectedMovie(i);">
+                <h3 @click="viewMovie(i);">
                   {{ i.title }}
                 </h3>
                 <p>{{ i.vote_average }} / 10</p>
@@ -19,6 +19,9 @@
         </v-layout>
         </v-card>
       </v-flex>
+      <h1 v-if="this.shortlist.length < 1" class="noResults">
+        You haven't added any movies to your favourites.
+      </h1>
     </v-layout>
   </v-container>
 </template>
@@ -30,7 +33,11 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   name: "Favourites",
   methods: {
-    ...mapActions(['setSelectedMovie'])
+    ...mapActions(['setSelectedMovie']),
+    viewMovie (movie) {
+      this.setSelectedMovie(movie);
+      return this.$router.push('/details');
+    }
   },
   data () {
     return {
@@ -43,6 +50,33 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+h3 {
+  margin-bottom: 20px;
+}
+h3:hover {
+  cursor: pointer;
+  text-decoration-line: underline;
+}
+h1 {
+  text-align: center;
+  padding: 50px;
+}
+.cardStyle {
+  margin: 20px;
+  padding: 5px 20px 5px 20px;
+}
+.cardStyle:hover {
+  background-color: lightgrey;
+}
+.pointer:hover {
+  cursor: pointer;
+}
+.innerColumn {
+  padding: 10px;
+}
+.card-img {
+  min-height: 0;
+  height: 30vh;
+}
 </style>

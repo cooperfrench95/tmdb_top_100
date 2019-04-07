@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <v-btn fixed top right @click="fetchMovies(false);"><v-icon>refresh</v-icon></v-btn>
-    <v-btn fixed top left @click="navigate('/');"><v-icon>home</v-icon></v-btn>
-    <v-btn fixed top class="favouriteButton" @click="navigate('/favourites')"><v-icon>favorite</v-icon></v-btn>
+    <v-btn fixed top left :class="homeButtonActive" @click="navigate('/');"><v-icon>home</v-icon></v-btn>
+    <v-btn fixed top :class="favouritesButtonActive" @click="navigate('/favourites')"><v-icon>favorite</v-icon></v-btn>
     <v-layout row justify-space-around wrap>
       <v-flex xs12 justify-center>
         <h1>Top {{ desiredResults }} Movies</h1>
@@ -191,6 +191,22 @@ export default {
           await this.setDesiredResults(value);
           this.fetchMovies(true);
         }
+      },
+      homeButtonActive () {
+        if (this.$route.path === '/') {
+          return 'activeButton'
+        }
+        else {
+          return ''
+        }
+      },
+      favouritesButtonActive () {
+        if (this.$route.path === '/favourites') {
+          return 'activeButton favouriteButton'
+        }
+        else {
+          return 'favouriteButton'
+        }
       }
   },
   created () {
@@ -215,6 +231,9 @@ h1 {
 .favouriteButton {
   left: 50%;
   transform:translate(-50%);
+}
+.activeButton {
+  color: green;
 }
 </style>
  
