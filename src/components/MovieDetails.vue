@@ -134,7 +134,7 @@ export default {
     }
   },
   mounted () {
-    this.$vuetify.goTo(0, {
+    this.$vuetify.goTo(200, {
       duration: 300,
       offset: 0,
       easing: 'easeInOutCubic',
