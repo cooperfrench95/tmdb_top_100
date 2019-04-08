@@ -1,4 +1,4 @@
-# imdb_top_100
+# tmdb_top_100
 
 ## Usage
 
@@ -42,7 +42,7 @@ The searching logic can be found in MainComponent and is a simple ES6 ```filter`
 
 * Add options to filter search by genre and year.
 
-* Add animations, transitions etc. Generally make the interface a bit prettier.
+* Add animations, transitions etc. Generally make the interface a bit prettier. Change default Vue logo to something else.
 
 * Add an option to compare movies that are on the shortlist, then display all of their information side by side in a table.
 
