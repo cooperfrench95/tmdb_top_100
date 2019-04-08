@@ -13,7 +13,7 @@ npm run serve
 
 #### App Structure
 
-The app is structured something like this:
+The app is structured something like this, in terms of the views:
 
 ```none
 App.vue
