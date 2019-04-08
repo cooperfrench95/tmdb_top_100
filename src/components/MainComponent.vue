@@ -1,8 +1,23 @@
 <template>
   <v-container>
-    <v-btn fixed top right @click="fetchMovies(false);"><v-icon>refresh</v-icon></v-btn>
-    <v-btn fixed top left :class="homeButtonActive" @click="navigate('/');"><v-icon>home</v-icon></v-btn>
-    <v-btn fixed top :class="favouritesButtonActive" @click="navigate('/favourites')"><v-icon>favorite</v-icon></v-btn>
+
+    <!-- BUTTONS -->
+
+    <v-btn fixed top right @click="fetchMovies(false);">
+      <v-icon>refresh</v-icon>
+    </v-btn>
+    <v-btn fixed top left :class="homeButtonActive" @click="navigate('/');">
+      <v-icon>home</v-icon>
+    </v-btn>
+    <v-btn fixed top :class="favouritesButtonActive" @click="navigate('/favourites')">
+      <v-icon>favorite</v-icon>
+    </v-btn>
+    <v-btn fixed bottom right icon @click="scrollToTop();">
+      <v-icon>arrow_upward</v-icon>
+    </v-btn>
+
+    <!-- LAYOUT -->
+
     <v-layout row justify-space-around wrap>
       <v-flex xs12 justify-center>
         <h1>Top {{ desiredResults }} Movies</h1>
@@ -62,6 +77,9 @@
         </v-expansion-panel>
       </v-flex>
     </v-layout>
+
+    <!-- CHILD VIEWS (MovieDetails, Favourites, MoviesList) RENDERED HERE -->
+
     <router-view :filteredMovies="this.filteredMovies" :noneFound="this.noneFound"></router-view>
   </v-container>
 </template>
@@ -83,8 +101,17 @@ export default {
       'setLanguage',
       'setDesiredResults'
     ]),
+    // Navigate to a different route e.g. /details
     navigate (to) {
       return this.$router.push(to);
+    },
+    // Animated scroll to top
+    scrollToTop () {
+      return this.$vuetify.goTo(0, {
+                duration: 300,
+                offset: 0,
+                easing: 'easeInOutCubic',
+              });
     }
   },
   data () {
@@ -92,7 +119,6 @@ export default {
       searchTerm: '',
       movie_img_baseURL: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2/',
       noneFound: false,
-      viewFavourites: false,
       radioValues: {
         1: {
           id: 1,
@@ -146,6 +172,8 @@ export default {
       'allMovies', 
       'shortlist',
     ]),
+    // This performs the search as the user types in the search bar.
+    // Search results are then passed as props to MovieDetails to be displayed.
     filteredMovies: function() {
       const filtered = this.allMovies.filter(movie => movie.title.toLowerCase().match(this.searchTerm.toLowerCase()));
       if (filtered.length === 0) {
@@ -192,6 +220,7 @@ export default {
           this.fetchMovies(true);
         }
       },
+      // Make the home button green when we're at '/' route
       homeButtonActive () {
         if (this.$route.path === '/') {
           return 'activeButton'
@@ -200,6 +229,7 @@ export default {
           return ''
         }
       },
+      // Make the favourites button green when we're at '/favourites' route
       favouritesButtonActive () {
         if (this.$route.path === '/favourites') {
           return 'activeButton favouriteButton'
@@ -209,8 +239,14 @@ export default {
         }
       }
   },
+  // Initial API calls
   created () {
     this.fetchMovies(true);
+    // If the second API call to get more details about a movie is not made when we select a movie,
+    // then all we have for each movie's genres are arbitrary id numbers, because that's what the
+    // /discover API returns.
+    // I'm leaving this method here because it could be useful to, for example, sort a search by 
+    // genre. But right now, it can be removed from the application and no functionality will be broken
     this.fetchGenres();
   }
 }

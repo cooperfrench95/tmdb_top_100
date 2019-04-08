@@ -1,13 +1,22 @@
 <template>
   <v-app> 
     <v-content>
-      <v-layout v-if="moviesLoading === false" row justify-space-around wrap>
+
+      <!-- A more in-detail look at the movie we've selected -->
+
+      <v-layout v-if="moviesLoading === false && error === false && selectedMovie !== undefined" row justify-space-around wrap>
         <v-flex xs12 md8>
           <v-card>
           <v-layout justify-center align-center row wrap>
+            
+            <!-- IMAGE -->
+
             <v-flex xs12 sm6>
                 <v-img class="card-img" :src="movie_img_baseURL + selectedMovie.poster_path" />
             </v-flex>
+
+            <!-- TITLE, GENRE, TAGLINE -->
+            
             <v-flex xs12 sm6>
               <v-layout column class="innerColumn">
                   <h2>
@@ -27,6 +36,9 @@
               </v-layout>
             </v-flex>
           </v-layout>
+
+          <!-- DETAILS -->
+
           <v-layout class="innerColumn">
             <v-flex xs12>
               <div>
@@ -69,17 +81,34 @@
           </v-card>
         </v-flex>
       </v-layout>
-      <v-layout row v-else >
+
+      <!-- Loading spinner -->
+
+      <v-layout row v-else-if="moviesLoading === true && error === false" >
         <v-flex xs12>
           <v-progress-circular class="loading" indeterminate color="green" size="200" width="20"/>
         </v-flex>
       </v-layout>
+
+      <!-- Error --> 
+
+      <v-layout row v-else>
+        <v-flex xs12>
+          <h1 class="noResults">
+            An error occurred.
+          </h1>
+        </v-flex>
+      </v-layout>
+
+
     </v-content>
   </v-app>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+
+// The MovieDetails component displays the selected movie in detail.
 
 export default {
   name: 'MovieDetails',
@@ -90,13 +119,14 @@ export default {
       if (this.shortlist.filter(i => i.id === this.selectedMovie.id).length > 0) { 
         return this.editShortList(this.shortlist.filter(i => i.id !== this.selectedMovie.id));
       }
+      // Otherwise, add it to the shortlist
       else {
         return this.editShortList([...this.shortlist, this.selectedMovie]);
       }
     }
   },
   computed: {
-    ...mapGetters(['selectedMovie', 'shortlist', 'moviesLoading']),
+    ...mapGetters(['selectedMovie', 'shortlist', 'moviesLoading', 'error']),
   },
   data () {
     return {

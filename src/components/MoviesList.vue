@@ -1,11 +1,14 @@
 <template>
   <v-container>
+
+    <!-- Show the movies if they're loaded -->
+
     <v-layout v-if="moviesLoading === false" row justify-space-around wrap>
       <v-flex v-for="(i, index) in this.movies" :key="i.id" xs12 sm6 lg4>
         <v-card class="cardStyle">
         <v-layout row justify-center align-center>
           <v-flex xs6>
-            <v-img contain class="card-img pointer" :src="movie_img_baseURL + i.poster_path" />
+            <v-img @click="viewMovie(i);" contain class="card-img pointer" :src="movie_img_baseURL + i.poster_path" />
           </v-flex>
           <v-flex xs6>
             <v-layout fill-height column justify-center class="innerColumn">
@@ -19,15 +22,34 @@
         </v-layout>
         </v-card>
       </v-flex>
+
+      <!-- If there are no search results -->
+
       <h1 v-if="this.noneFound === true" class="noResults">
         Sorry, no results found.
       </h1>
     </v-layout>
-    <v-layout row v-else >
+
+    <!-- Loading spinner -->
+
+    <v-layout row v-if="moviesLoading === true" >
       <v-flex xs12>
         <v-progress-circular class="loading" indeterminate color="green" size="200" width="20"/>
       </v-flex>
     </v-layout>
+
+
+    <!-- Error --> 
+
+    <v-layout row v-if="error === true">
+      <v-flex xs12>
+        <h1 class="noResults">
+          An error occurred.
+        </h1>
+      </v-flex>
+    </v-layout>
+
+
   </v-container>
 </template>
 
@@ -36,10 +58,12 @@
 import { mapActions, mapGetters } from 'vuex';
 
 // The MoviesList component displays the movies that match the current search.
+
 export default {
   name: "MoviesList",
   methods: {
     ...mapActions(['setSelectedMovie']),
+    // Selects a movie in VueX and sends us to the '/details' route.
     viewMovie (movie) {
       this.setSelectedMovie(movie);
       return this.$router.push('/details');
@@ -51,10 +75,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['moviesLoading']),
+    ...mapGetters(['moviesLoading', 'error']),
+    // Passed from 'Main' into <router-view> as props.
     movies: function() {
       return this.$attrs.filteredMovies;
     },
+    // Passed from 'Main' into <router-view> as props.
     noneFound: function() {
       return this.$attrs.noneFound;
     }
@@ -87,6 +113,7 @@ h1 {
 }
 .innerColumn {
   padding: 10px;
+  overflow: hidden;
 }
 .card-img {
   min-height: 0;

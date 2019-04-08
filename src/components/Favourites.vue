@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    
+    <!-- Display the movies in the shortlist -->
+
     <v-layout row justify-space-around wrap>
       <v-flex v-for="i in this.shortlist" :key="i.id" xs12 sm6 lg4>
         <v-card class="cardStyle">
@@ -19,6 +22,9 @@
         </v-layout>
         </v-card>
       </v-flex>
+
+      <!-- If there aren't any movies in the shortlist, display this messsage -->
+
       <h1 v-if="this.shortlist.length < 1" class="noResults">
         You haven't added any movies to your favourites.
       </h1>
@@ -30,10 +36,12 @@
 import { mapActions, mapGetters } from 'vuex';
 
 // The Favourites component displays the movies that have been added to the shortlist.
+
 export default {
   name: "Favourites",
   methods: {
     ...mapActions(['setSelectedMovie']),
+    // This method sends us to '/details' to get a closer look at each movie.
     viewMovie (movie) {
       this.setSelectedMovie(movie);
       return this.$router.push('/details');

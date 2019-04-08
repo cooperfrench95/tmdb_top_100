@@ -8,6 +8,8 @@
 
 <script>
 
+// Nothing interesting here. ./components/MainComponent.vue is where to start.
+
 export default {
   name: 'App',
 };
