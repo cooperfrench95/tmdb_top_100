@@ -36,6 +36,8 @@ The most important methods are ```fetchMovies``` and ```setSelectedMovie```.
 
 The searching logic can be found in MainComponent and is a simple ES6 ```filter``` function done on the list of movies in the store, which then gets passed down to MoviesList as props.
 
+I used ESLint with Airbnb style as requested, but there were a couple of rules that I found a little annoying in VueX, so I turned those off, namely no-shadow, no-return-reassign, and no-param-reassign. You can see my config in package.json.
+
 #### Potential additions that I may have added, given more time
 
 * Add an option when no search results are found to search the whole TMDB database (rather than just the movies that are in state right now). If the user chooses this option, we call the /search/movie API with the search term and display the results.

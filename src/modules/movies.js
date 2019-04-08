@@ -65,9 +65,6 @@ const actions = {
 
       // If there is a selected movie, we need to update that data.
       if (context.state.selectedMovie !== undefined) {
-        if (wantLoadingSpinner === true) {
-          context.commit('loading');
-        }
         const update = await axios.get(`https://api.themoviedb.org/3/movie/${context.state.selectedMovie.id}?api_key=${API_KEY}&language=${context.state.language}`);
         context.commit('selectMovie', update.data);
       }
