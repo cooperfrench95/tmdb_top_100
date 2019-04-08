@@ -45,3 +45,5 @@ The searching logic can be found in MainComponent and is a simple ES6 ```filter`
 * Add animations, transitions etc. Generally make the interface a bit prettier.
 
 * Add an option to compare movies that are on the shortlist, then display all of their information side by side in a table.
+
+* Recommend movies with a call to the /similar API and display them alongside the selected movie in MovieDetails.

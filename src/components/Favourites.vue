@@ -54,6 +54,13 @@ export default {
   },
   computed: {
     ...mapGetters(['shortlist']),
+  },
+  mounted () {
+    this.$vuetify.goTo(0, {
+      duration: 300,
+      offset: 0,
+      easing: 'easeInOutCubic',
+    });
   }
 }
 </script>

@@ -241,6 +241,7 @@ export default {
   },
   // Initial API calls
   created () {
+    this.scrollToTop();
     this.fetchMovies(true);
     // If the second API call to get more details about a movie is not made when we select a movie,
     // then all we have for each movie's genres are arbitrary id numbers, because that's what the

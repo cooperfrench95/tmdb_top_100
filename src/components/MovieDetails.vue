@@ -133,6 +133,13 @@ export default {
       movie_img_baseURL: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2/',
     }
   },
+  mounted () {
+    this.$vuetify.goTo(0, {
+      duration: 300,
+      offset: 0,
+      easing: 'easeInOutCubic',
+    });
+  }
 }
 </script>
 
