@@ -15,15 +15,13 @@ npm run serve
 
 The app is structured something like this:
 
+```none
 App.vue
-
   |___MainComponent.vue
-
             |____MoviesList.vue
-
             |____MovieDetails.vue
-
             |____Favourites.vue
+```
 
 All components are hooked up to VueX, where most state management takes place. Routing is done with Vue Router.
 
